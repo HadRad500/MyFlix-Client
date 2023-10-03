@@ -1,42 +1,74 @@
 import { useState, useEffect } from "react";
 import { MovieCard } from "../movie-card/movie-card";
 import { MovieView } from "../movie-view/movie-view";
+import { LoginView } from "../login-view/login-view";
+import { SignupView } from "../signup-view/signup-view";
 
-
-export const MainView = () => {
+export function MainView() {
+    const storedUser = JSON.parse(localStorage.getItem("user"));
+    const storedToken = localStorage.getItem("token");
+    const [user, setUser] = useState(storedUser ? storedUser : null);
+    const [token, setToken] = useState(storedToken ? storedToken : null);
+    const [selectedMovie, setSelectedMovie] = useState(null);
     const [movies, setMovies] = useState([]);
 
     useEffect(() => {
-        fetch("https://had-movies-d81b2962e1bc.herokuapp.com/movies")
+        if (!token) {
+            return
+        }
 
-            .then(res => res.json())
+        fetch("https://had-movies-d81b2962e1bc.herokuapp.com/movies",
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            }
+        ).then(res => res.json())
             .then(result => {
                 setMovies(result)
+                console.log(result)
+
             })
+
     }, [])
-                /*const moviesFromApi = data.docs.map((doc) => {
-                    return {
-                        id: doc.key,
-                        title: doc.title,
-                        genre: doc.genre,
-                        image: ``,
-                        director: doc.director_name?.[0]
-                    };
-                });
-                setMovies(moviesFromApi);
-            });
-    }, [])*/;
 
-    const [selectedMovie, setSelectedMovie] = useState(null);
 
-    if (selectedMovie) {
+    if (!user) {
         return (
-            <MovieView movie={selectedMovie} onBackClick={() => setSelectedMovie(null)} />
+            <>
+                <LoginView
+                    onLoggedIn={(user, token) => {
+                        setUser(user);
+                        setToken(token);
+                    }}
+                />
+                or
+                <SignupView />
+            </>
         );
     }
 
     if (movies.length === 0) {
         return <div> The list is empty!</div>;
+    }
+
+    if (selectedMovie) {
+        return (
+            <>
+                <button
+                    onClick={() => {
+                        setUser(null);
+                    }}
+                >
+                    Logout
+                </button>
+
+                <MovieView
+                    movie={selectedMovie}
+                    onBackClick={() => setSelectedMovie(null)}
+                />
+            </>
+        );
     }
 
     return (
@@ -45,11 +77,12 @@ export const MainView = () => {
                 <MovieCard
                     key={movie._id}
                     movie={movie}
-                    onBookClick={(newSelectedMovie) => {
+                    onMovieClick={(newSelectedMovie) => {
                         setSelectedMovie(newSelectedMovie);
                     }}
                 />
             ))}
         </div>
     );
-};
+}
+
