@@ -12,59 +12,52 @@ export const LoginView = ({ onLoggedIn }) => {
             Password: password
         };
 
-        fetch("https://had-movies-d81b2962e1bc.herokuapp.com/movies", {
+        fetch("https://had-movies-d81b2962e1bc.herokuapp.com/login", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify(data)
-        })
-            .then((response) => response.json())
+        }).then((response) => response.json())
             .then((data) => {
                 console.log("Login Response: ", data);
                 if (data.user) {
+                    localStorage.setItem("user", JSON.stringify(data.user));
+                    localStorage.setItem("token", data.token);
                     onLoggedIn(data.user, data.token);
+
                 } else {
                     alert("No such user");
                 }
+            })
+            .catch((e) => {
+                alert("Something went Wrong");
             });
-
-        if (data.user) {
-            localStorage.setItem("user", JSON.stringify(data.user));
-            localStorage.setItem("token", data.token);
-            onLoggedIn(data.user, data.token);
-        } else {
-            alert("No such user");
-        };
-
-        .catch ((e) => {
-    alert("Something went Wrong");
-});
     };
 
 
-return (
-    <form onSubmit={handleSubmit}>
-        <label>
-            Username:
-            <input
-                type="text"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                required
-            />
-        </label>
+    return (
+        <form onSubmit={handleSubmit}>
+            <label>
+                Username:
+                <input
+                    type="text"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    required
+                />
+            </label>
 
-        <label>
-            Password:
-            <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-            />
-        </label>
-        <button type="submit">Submit</button>
-    </form>
-);
+            <label>
+                Password:
+                <input
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                />
+            </label>
+            <button type="submit">Submit</button>
+        </form>
+    );
 };
