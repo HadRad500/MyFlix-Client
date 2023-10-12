@@ -6,10 +6,10 @@ import MovieCard from "../movie-card/movie-card";
 
 export function ProfileView() {
 
-    const [Username, setUsername] = useState("");
-    const [Password, setPassword] = useState("");
-    const [Email, setEmail] = useState("");
-    const [Birthday, setBirthday] = useState("");
+    const [username, setUsername] = useState("");
+    const [password, setPassword] = useState("");
+    const [email, setEmail] = useState("");
+    const [birthday, setBirthday] = useState("");
 
     const handleSubmit = (event) => {
         event.preventDefault();
