@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import MovieCard from "../movie-card/movie-card";
 
 
-const ProfileView = ({ user, token, movies, setUser }) => {
+export function ProfileView() {
 
     const [Username, setUsername] = useState("");
     const [Password, setPassword] = useState("");
@@ -156,6 +156,7 @@ const ProfileView = ({ user, token, movies, setUser }) => {
             </>
         );
     };
+};
 
 
 
