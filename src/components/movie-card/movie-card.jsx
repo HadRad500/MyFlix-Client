@@ -1,95 +1,102 @@
 import PropTypes from "prop-types";
 import { useEffect, useState } from "react"
 import { Button, Card, Col, Container, Row } from "react-bootstrap";
+import { Link } from 'react-router-dom'
 
 
-export const MovieCard = ({ movie }) => {
-    const [isFavorite, setIsFavorite] = useState();
+export const MovieCard = ({ movie, getUser, user }) => {
+    const token = localStorage.getItem("token");
 
-    useEffect(() => {
-        console.log(user);
-        if (user.favoriteMovies && user.favoriteMovies.inclludes(movie._id)) {
-            setIsFavorite(true);
-        }
-    });
+    //     useEffect(() => {
+    //         console.log(user);
+    //         if (user.favoriteMovies && user.favoriteMovies.includes(movie._id)) {
+    //             setIsFavorite(true);
+    //         }
+    //     }, []);
 
     const addFavoriteMovie = () => {
+        const storedUser = JSON.parse(localStorage.getItem("user"));
+
         console.log("Add FavoriteMovies")
-        fetch(`https://had-movies-d81b2962e1bc.herokuapp.com/users/${user.username}/movies`,
+        fetch(`https://had-movies-d81b2962e1bc.herokuapp.com/users/${storedUser.Username}/movies/${movie.id}`,
             {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                     Authorization: `Bearer ${token}`,
                 },
-                .then((response) => {
-                    if (response.ok) {
-                        return response.json();
-                    } else {
-                        console.log("failed to add movie")
-                    }
-                })
-            })
-
+            }).then((response) => response.json())
             .then((response) => {
-                if (response.ok) {
-                    localStorage.setItem("user", JSON.stringify(response));
-                    setIsFavorite(true);
-                    console.log("Added to List!")
-                }
+                getUser()
+                console.log("Added to List!")
+            }).catch(e => {
+                console.log(e)
+                console.log("it didnt work")
             })
     }
-}
 
-const removeFavoriteMovie = () => {
-    console.log("Remove FavoriteMovies")
-    fetch(`https://had-movies-d81b2962e1bc.herokuapp.com/users/${user.username}/movies`,
-        {
-            method: "Delete",
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${token}`,
-            },
-                        .then((response) => {
-                if (response.ok) {
-                    return response.json();
-                } else {
-                    console.log("failed to remove movie")
-                }
-            })
-        })
+    const removeFavoriteMovie = () => {
+        const storedUser = JSON.parse(localStorage.getItem("user"));
 
-        .then((response) => {
-            if (response.ok) {
-                localStorage.setItem("user", JSON.stringify(response));
-                setIsFavorite(true);
+
+        console.log("Removed FavoriteMovies")
+        fetch(`https://had-movies-d81b2962e1bc.herokuapp.com/users/${storedUser.Username}/movies/${movie.id}`,
+            {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                },
+            }).then((response) => response.json())
+            .then((response) => {
+                getUser()
                 console.log("Removed from List!")
-            }
-        })
-}
+            }).catch(e => {
+                console.log(e)
+                console.log("it didnt work")
+            })
+    }
 
-return (
-    <Card className="h-100">
-        <Card.Img variant="top" src={movie.image} />
-        <Card.Body>
-            <Card.Title>{movie.title}</Card.Title>
-            <Card.Text>{movie.director}</Card.Text>
-            <Card.Text>{movie.genre}</Card.Text>
-            <Link to={`/movies/${encodeURIComponent(movie.id)}`}>
-                <Button variant="link"> Open </Button>
-            </Link>
-        </Card.Body>
-    </Card>
+    const isFave = (user.FavoriteMovies || []).includes(movie.id)
 
-);
-    };
+    return (
+        <Card className="h-100">
+            <Card.Img variant="top" src={movie.image} />
+            <Card.Body>
+                <Card.Title>{movie.title}</Card.Title>
+                <Card.Text>{movie.director}</Card.Text>
+                <Card.Text>{movie.genre}</Card.Text>
+                <Link to={`/movies/${encodeURIComponent(movie.id)}`}>
+                    <Button variant="link"> More Info </Button>
+                </Link>
 
-MovieCard.propTypes = {
-    movie: PropTypes.shape({
-        Title: PropTypes.string.isRequired
-        //         Text: PropTypes.string.isRequired,
-        //         image: PropTypes.string.isRequired,
-        //         director: PropTypes.string,
-        //         genre: PropTypes.string
-    }).isRequired,
+                {isFave ? <Button
+                    className="btn-fav-movie"
+                    variant="link"
+                    onClick={removeFavoriteMovie}
+                >
+                    Remove from fav
+                </Button>
+                    :
+                    <Button
+                        className="btn-fav-movie"
+                        variant="link"
+                        onClick={addFavoriteMovie}
+                    >
+                        Add to fav
+                    </Button>}
+            </Card.Body>
+        </Card>
+
+    );
 };
+
+// MovieCard.propTypes = {
+//     movie: PropTypes.shape({
+//         Title: PropTypes.string.isRequired
+//         //         Text: PropTypes.string.isRequired,
+//         //         image: PropTypes.string.isRequired,
+//         //         director: PropTypes.string,
+//         //         genre: PropTypes.string
+//     }).isRequired,
+// };
