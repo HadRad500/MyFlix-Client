@@ -85,6 +85,19 @@ export function ProfileView() {
 
                                             <Form.Group>
                                                 <Form.Label>
+                                                    Password:
+                                                    <Form.Control
+                                                        type="password"
+                                                        value={password}
+                                                        onChange={(e) => {
+                                                            setPassword(e.target.value);
+                                                        }}
+                                                    />
+                                                </Form.Label>
+                                            </Form.Group>
+
+                                            <Form.Group>
+                                                <Form.Label>
                                                     email:
                                                     <Form.Control
                                                         type="email"

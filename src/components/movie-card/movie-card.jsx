@@ -1,5 +1,3 @@
-import PropTypes from "prop-types";
-import { useEffect, useState } from "react"
 import { Button, Card, Col, Container, Row } from "react-bootstrap";
 import { Link } from 'react-router-dom'
 
@@ -75,7 +73,16 @@ export const MovieCard = ({ movie, getUser, user }) => {
                     variant="link"
                     onClick={removeFavoriteMovie}
                 >
-                    Remove from fav
+                    <svg
+                        baseProfile="full"
+                        width="30"
+                        height="30"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="150" cy="100" r="90" fill="red" />
+                        <path
+                            fill-rule="evenodd"
+                        />
+                    </svg>
                 </Button>
                     :
                     <Button
@@ -83,8 +90,15 @@ export const MovieCard = ({ movie, getUser, user }) => {
                         variant="link"
                         onClick={addFavoriteMovie}
                     >
-                        Add to fav
-                    </Button>}
+                        <svg
+                            baseProfile="full"
+                            width="30"
+                            height="30"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="150" cy="100" r="90" fill="white" />
+                        </svg>
+                    </Button>
+                }
             </Card.Body>
         </Card>
 

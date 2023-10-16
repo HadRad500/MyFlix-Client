@@ -5,8 +5,7 @@ import { LoginView } from "../login-view/login-view";
 import { SignupView } from "../signup-view/signup-view";
 import { NavigationBar } from "../navigation-bar/navigation-bar";
 import { ProfileView } from "../profile-view/profile-view";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
+import { Button, Col, Container, Nav, Row } from "react-bootstrap";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 
 
@@ -115,25 +114,30 @@ export function MainView() {
                         }
                     />
                     <Route
-                        path="/"
+                        path="/profile"
                         element={
-                            <>
-                                {!user ? (
-                                    <Navigate to="/login" replace />
-                                ) : movies.length === 0 ? (
-                                    <Col>The List is Empty</Col>
-                                ) : (
-                                    <>
-                                        {movies.map((movie) => (
-                                            <Col className="mb-4" key={movie.id} md={3}>
-                                                <MovieCard movie={movie} getUser={getUser} user={user} />
-                                            </Col>
-                                        ))}
-                                    </>
-                                )}
-                            </>
+                            <ProfileView
+                                user={user}
+                                token={token}
+                                movies={movies}
+                                setuser={setUser}
+                            />
                         }
                     />
+
+                    {!user ? (
+                        <Navigate to="/login" replace />
+                    ) : movies.length === 0 ? (
+                        <Col>The List is Empty</Col>
+                    ) : (
+                        <>
+                            {movies.map((movie) => (
+                                <Col className="mb-4" key={movie.id} md={3}>
+                                    <MovieCard movie={movie} getUser={getUser} user={user} />
+                                </Col>
+                            ))}
+                        </>
+                    )}
                 </Routes>
             </Row>
         </BrowserRouter>
