@@ -45,8 +45,10 @@ export function NavigationBar(props) {
                                     <Nav.Link href="/profile"> Profile({props.user.Username}) </Nav.Link>
                                 </Nav.Item>
                                 <Nav.Item>
-                                    <Nav.Link href="/login" onClick={() => { dispatch(setUser({ user: null, token: null })); localStorage.clear(); }}
-                                    > Logout </Nav.Link>
+                                    <Nav.Link href="*" onClick={(e) => {
+                                        e.preventDefault()
+                                        props.onLoggedOut()
+                                    }}> Logout </Nav.Link>
                                 </Nav.Item>
                                 {/*<Nav.Item>
                                 <Nav.Link href="/login" onClick={onLoggedOut}> Logout </Nav.Link>

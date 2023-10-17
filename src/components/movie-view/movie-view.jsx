@@ -9,6 +9,7 @@ export const MovieView = ({ movies }) => {
     const { movieTitle } = useParams() //https://reactrouter.com/en/main/hooks/use-params
     //http://localhost:3000/movie/{movieId}
 
+
     React.useEffect(() => {
         if (!movieTitle) {
             return
@@ -32,10 +33,12 @@ export const MovieView = ({ movies }) => {
         }
 
         getMovie()
+
     }, [movieTitle])
 
+
     if (!movie) {
-        return <div>Not Found</div>
+        return <div>Not found</div>
     }
 
     return (
@@ -44,7 +47,7 @@ export const MovieView = ({ movies }) => {
                 <Row className="justify-content-md-center">
                     <Col className="col-lg-6">
                         <Card className="border-0 moviePoster mx-auto">
-                            <Card.Img src={movie.Imagepath} className="rounded-4" />
+                            <Card.Img src={movie.ImagePath} className="rounded-4" />
                         </Card>
                     </Col>
                     <Col className="col-lg-6 mt-5 mt-md-0">
