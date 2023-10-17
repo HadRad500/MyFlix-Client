@@ -6,7 +6,7 @@ import Img from "../img/MyFlix Img.jpeg";
 
 
 
-export function NavigationBar(props) {
+export function NavigationBar({ user, onLoggedOut, setSearch }) {
     return (
         <Navbar
             expand="md"
@@ -27,7 +27,7 @@ export function NavigationBar(props) {
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
                 <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className="justify-content-end d-flex flex-grow-1">
-                        {!props.user ? (
+                        {!user ? (
                             <>
                                 <Nav.Item>
                                     <Nav.Link href="/login"> Login </Nav.Link>
@@ -39,16 +39,14 @@ export function NavigationBar(props) {
                         ) : (
                             <>
                                 <Nav.Item>
-                                    <Nav.Link href="/"> Home </Nav.Link>
+                                    <Nav.Link href="/movies"> Home </Nav.Link>
                                 </Nav.Item>
                                 <Nav.Item>
-                                    <Nav.Link href="/profile"> Profile({props.user.Username}) </Nav.Link>
+                                    <Nav.Link href="/profile"> Profile </Nav.Link>
                                 </Nav.Item>
                                 <Nav.Item>
-                                    <Nav.Link href="*" onClick={(e) => {
-                                        e.preventDefault()
-                                        props.onLoggedOut()
-                                    }}> Logout </Nav.Link>
+                                    <Nav.Link href="/login" onClick={onLoggedOut}>
+                                        Logout </Nav.Link>
                                 </Nav.Item>
                                 {/*<Nav.Item>
                                 <Nav.Link href="/login" onClick={onLoggedOut}> Logout </Nav.Link>

@@ -15,6 +15,8 @@ export function MainView() {
     const [user, setUser] = useState(storedUser ? storedUser : null);
     const [token, setToken] = useState(storedToken ? storedToken : null);
     const [movies, setMovies] = useState([]);
+    const [search, setSearch] = useState("");
+    const [filteredMovies, setFilteredMovies] = useState([]);
 
     function getUser() {
         console.log(storedUser.Username)
@@ -72,12 +74,26 @@ export function MainView() {
 
     }, [token]);
 
+    const getSearchedMovies = (arr, query) => {
+        return arr.filter((movie) => {
+            return movie.title.toLowerCase().includes(query.toLowerCase());
+        });
+    };
+
+    useEffect(() => {
+        setFilteredMovies(getSearchedMovies(movies, search));
+    }, [search, movies]);
+
+
+
 
     return (
         <BrowserRouter>
             <NavigationBar
                 user={user}
                 onLoggedOut={onUserLogout}
+                search={search}
+                setSearch={setSearch}
             />
             <Routes>
                 <Route
@@ -96,6 +112,27 @@ export function MainView() {
                                 <LoginView onLoggedIn={onUserLogin} />
                             )}
                         </>
+                    }
+                />
+                <Route
+                    path="/movies"
+                    element={
+                        <Row>
+
+                            {filteredMovies.map((movie) => {
+                                return (
+                                    <Col md="4" key={movie.id}>
+                                        <MovieCard
+                                            movie={movie}
+                                            token={token}
+                                            setUser={setUser}
+                                            user={user}
+                                        />
+                                    </Col>
+                                );
+                            })}
+
+                        </Row>
                     }
                 />
                 <Route
