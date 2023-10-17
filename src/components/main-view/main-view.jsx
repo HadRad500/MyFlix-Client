@@ -22,18 +22,30 @@ export function MainView() {
             {
                 headers: {
                     Authorization: `Bearer ${token}`
-                }
+                },
             }
-        ).then(res => res.json())
-            .then(result => {
+        )
+            .then((res) => res.json())
+            .then((result) => {
                 localStorage.setItem("user", JSON.stringify(result));
                 setUser(result)
-            })
+            });
+    }
+
+    function onUserLogin(user, token) {
+        setUser(user),
+            setToken(token)
+    }
+
+    function onUserLogout() {
+        setUser(null)
+        setToken(null)
+        localStorage.clear()
     }
 
     useEffect(() => {
         if (!token) {
-            return
+            return;
         }
 
         fetch("https://had-movies-d81b2962e1bc.herokuapp.com/movies",
@@ -42,107 +54,102 @@ export function MainView() {
                     Authorization: `Bearer ${token}`
                 }
             }
-        ).then(res => res.json())
-            .then(result => {
+        )
+            .then((res) => res.json())
+            .then((result) => {
                 //console.log(result)
 
-                const formattedResult = result.map(res => ({
+                const formattedResult = result.map((res) => ({
                     title: res.Title,
                     genre: res.Genre.Name,
                     director: res.Director.Name,
                     image: res.ImagePath,
                     id: res._id
-                }))
+                }));
                 console.log("formatted", formattedResult)
                 setMovies(formattedResult)
-            })
+            });
 
-    }, [])
+    }, [token]);
 
 
     return (
         <BrowserRouter>
             <NavigationBar
                 user={user}
-                onLoggedOut={() => {
-                    setUser(null);
-                }}
+                onLoggedOut={onUserLogout}
             />
-            <Row className="justify-content-md-center">
-                <Routes>
-                    <Route
-                        path="/signup"
-                        element={
-                            <>
-
-                                {/*{!user ? (
-                                    <Navigate to="/" />
-                               ) : (*/}
-                                <Col md={5}>
-                                    <SignupView />
-                                </Col>
-                                {/* )}*/}
-                            </>
-                        }
-                    />
-                    <Route
-                        path="/login"
-                        element={
-                            <>
-                                {user ? (
-                                    <Navigate to="/" />
-                                ) : (
-                                    <Col md={5}>
-                                        <LoginView onLoggedIn={(user) => setUser(user)} />
-                                    </Col>
-                                )}
-                            </>
-                        }
-                    />
-                    <Route
-                        path="/movies/:movieId"
-                        element={
-                            <>
-                                {!user ? (
-                                    <Navigate to="/login" replace />
-                                ) : (
-                                    <Col md={0}>
-                                        <MovieView movies={movies} />
-                                    </Col>
-                                )}
-                            </>
-                        }
-                    />
-                    <Route
-                        path="/profile"
-                        element={
-                            <ProfileView
-                                user={user}
-                                token={token}
-                                movies={movies}
-                                setuser={setUser}
-                            />
-                        }
-                    />
-
-                    {!user ? (
-                        <Navigate to="/login" replace />
-                    ) : movies.length === 0 ? (
-                        <Col>The List is Empty</Col>
-                    ) : (
+            <Routes>
+                <Route
+                    path="/signup"
+                    element={
+                        <SignupView />
+                    }
+                />
+                <Route
+                    path="/login"
+                    element={
                         <>
-                            {movies.map((movie) => (
-                                <Col className="mb-4" key={movie.id} md={3}>
-                                    <MovieCard movie={movie} getUser={getUser} user={user} />
-                                </Col>
-                            ))}
+                            {user ? (
+                                <Navigate to="/" />
+                            ) : (
+                                <LoginView onLoggedIn={onUserLogin} />
+                            )}
                         </>
-                    )}
-                </Routes>
-            </Row>
+                    }
+                />
+                <Route
+                    path="/movies/:movieTitle"
+                    element={
+                        <>
+                            {!user ? (
+                                <Navigate to="/login" replace />
+                            ) : (
+                                <MovieView movies={movies} />
+                            )}
+                        </>
+                    }
+                />
+                <Route
+                    path="/profile"
+                    element={
+                        <ProfileView
+                            user={user}
+                            token={token}
+                            movies={movies}
+                            setuser={setUser}
+                        />
+                    }
+                />
+
+                <Route
+                    path="/"
+                    element={
+                        <Row>
+                            {!user ? (
+                                <Navigate to="/login" replace />
+                            ) : movies.length === 0 ? (
+                                <Col>The List is Empty</Col>
+                            ) : (
+                                <>
+                                    {movies.map((movie) => (
+                                        <Col className="mb-4" key={movie.id} md={3}>
+                                            <MovieCard
+                                                movie={movie}
+                                                getUser={getUser}
+                                                user={user}
+                                            />
+                                        </Col>
+                                    ))}
+                                </>
+                            )}
+                        </Row>
+                    }
+                />
+            </Routes>
         </BrowserRouter>
     );
-};
+}
 
 
 

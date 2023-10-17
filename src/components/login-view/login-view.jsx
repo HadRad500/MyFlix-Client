@@ -20,7 +20,8 @@ export const LoginView = ({ onLoggedIn }) => {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify(data)
-        }).then((response) => response.json())
+        })
+            .then((response) => response.json())
             .then((data) => {
                 console.log("Login Response: ", data);
                 if (data.user) {
@@ -39,58 +40,52 @@ export const LoginView = ({ onLoggedIn }) => {
 
 
     return (
-        <Container className="margin-top-custom">
-            <Row className="justify-content-md-center">
-                <Col md={5}>
-                    <CardGroup classname="">
-                        <Card classname="mb-5 border border-0">
-                            <Card.Body>
-                                <Card.Title> Have an Account? Login:</Card.Title>
-                                <Form onSubmit={handleSubmit}>
-                                    <Form.Group>
-                                        <Form.Label>
-                                            Username:
-                                            <Form.Control
-                                                type="text"
-                                                value={username}
-                                                onChange={(e) => {
-                                                    setUsername(e.target.value);
-                                                }}
-                                                required
-                                                placeholder="Enter Username"
-                                            />
-                                        </Form.Label>
-                                    </Form.Group>
+        <Row>
+            <Col md={4} className="mx-auto">
+                <h4> Have an Account? Login:</h4>
+                <Form onSubmit={handleSubmit}>
+                    <Form.Group>
+                        <Form.Label>
+                            Username:
+                        </Form.Label>
+                        <Form.Control
+                            type="text"
+                            value={username}
+                            onChange={(e) => {
+                                setUsername(e.target.value);
+                            }}
+                            required
+                            placeholder="Enter Username"
+                        />
+                    </Form.Group>
 
-                                    <Form.Group>
-                                        <Form.Label>
-                                            Password:
-                                            <Form.Control
-                                                type="password"
-                                                value={password}
-                                                onChange={(e) => {
-                                                    setPassword(e.target.value);
-                                                }}
-                                                required
-                                                placeholder="Enter Password"
-                                            />
-                                        </Form.Label>
-                                    </Form.Group>
-                                    <Button
-                                        variant="primary"
-                                        type="submit"
-                                        onClick={handleSubmit}
-                                        className="text-white"
-                                    >
-                                        Submit
-                                    </Button>
-                                </Form>
-                            </Card.Body>
-                        </Card>
-                    </CardGroup>
-                </Col>
-            </Row>
-        </Container>
+                    <Form.Group>
+                        <Form.Label>
+                            Password:
+                        </Form.Label>
+                        <Form.Control
+                            type="password"
+                            value={password}
+                            onChange={(e) => {
+                                setPassword(e.target.value);
+                            }}
+                            required
+                            placeholder="Enter Password"
+                        />
+                    </Form.Group>
+                    <div className="d-grid gap-2 mt-4">
+                        <Button
+                            variant="primary"
+                            type="submit"
+                            onClick={handleSubmit}
+                            className="text-white"
+                        >
+                            Submit
+                        </Button>
+                    </div>
+                </Form>
+            </Col>
+        </Row>
 
     );
 };

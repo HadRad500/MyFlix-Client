@@ -6,20 +6,18 @@ import Img from "../img/MyFlix Img.jpeg";
 
 
 
-export function NavigationBar() {
-
-
+export function NavigationBar(props) {
     return (
         <Navbar
             expand="md"
-            className="mb-5 fixed-top justify-content-end navbar-style"
+            className="mb-5 justify-content-end navbar-style"
         >
-            <Container className="align-bottom align-items-end align-content-end align-self-end navbar-style">
+            <Container className="align-bottom navbar-style">
                 <img
                     alt=""
                     src={Img}
-                    width="300px"
-                    height=""
+                    width="80px"
+                    height="auto"
                     className="d-inline-block align-top"
                 />
 
@@ -29,40 +27,46 @@ export function NavigationBar() {
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
                 <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className="justify-content-end d-flex flex-grow-1">
-                        <>
-                            <Nav.Item>
-                                <Nav.Link href="/login"> Login </Nav.Link>
-                            </Nav.Item>
-                            <Nav.Item>
-                                <Nav.Link href="/signup"> Signup </Nav.Link>
-                            </Nav.Item>
-                        </>
-
-                        <>
-                            <Nav.Item>
-                                <Nav.Link href="/movies"> Home </Nav.Link>
-                            </Nav.Item>
-                            <Nav.Item>
-                                <Nav.Link href="/profile"> Profile </Nav.Link>
-                            </Nav.Item>
-                            {/*<Nav.Item>
+                        {!props.user ? (
+                            <>
+                                <Nav.Item>
+                                    <Nav.Link href="/login"> Login </Nav.Link>
+                                </Nav.Item>
+                                <Nav.Item>
+                                    <Nav.Link href="/signup"> Signup </Nav.Link>
+                                </Nav.Item>
+                            </>
+                        ) : (
+                            <>
+                                <Nav.Item>
+                                    <Nav.Link href="/"> Home </Nav.Link>
+                                </Nav.Item>
+                                <Nav.Item>
+                                    <Nav.Link href="/profile"> Profile({props.user.Username}) </Nav.Link>
+                                </Nav.Item>
+                                <Nav.Item>
+                                    <Nav.Link href="/login" onClick={() => { dispatch(setUser({ user: null, token: null })); localStorage.clear(); }}
+                                    > Logout </Nav.Link>
+                                </Nav.Item>
+                                {/*<Nav.Item>
                                 <Nav.Link href="/login" onClick={onLoggedOut}> Logout </Nav.Link>
     </Nav.Item>*/}
-                            <Form className="d-flex navbar-style">
-                                <Form.Control
-                                    onChange={(e) => {
-                                        setSearch(e.target.value);
-                                    }}
-                                    type="search"
-                                    placeholder="Search"
-                                    className="me-2"
-                                    aria-label="Search"
-                                />
-                            </Form>
-                        </>
+                                <Form className="d-flex navbar-style">
+                                    <Form.Control
+                                        onChange={(e) => {
+                                            setSearch(e.target.value);
+                                        }}
+                                        type="search"
+                                        placeholder="Search"
+                                        className="me-2"
+                                        aria-label="Search"
+                                    />
+                                </Form>
+                            </>
+                        )}
                     </Nav>
                 </Navbar.Collapse>
             </Container>
         </Navbar >
-    )
+    );
 }
