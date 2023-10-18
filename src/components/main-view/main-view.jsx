@@ -35,8 +35,8 @@ export function MainView() {
     }
 
     function onUserLogin(user, token) {
-        setUser(user),
-            setToken(token)
+        setUser(user)
+        setToken(token)
     }
 
     function onUserLogout() {

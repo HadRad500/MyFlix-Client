@@ -1,10 +1,10 @@
 import { useState } from "react";
-import { Card, CardGroup, Col, Container, Form, Row, Button } from "react-bootstrap";
-import Form from "react-bootstrap/Form";
+import { Col, Form, Row, Button, Alert } from "react-bootstrap";
 
 export const LoginView = ({ onLoggedIn }) => {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
+    const [isError, setIsError] = useState("")
 
     const handleSubmit = (event) => {
         event.preventDefault();
@@ -30,16 +30,30 @@ export const LoginView = ({ onLoggedIn }) => {
                     onLoggedIn(data.user, data.token);
 
                 } else {
-                    alert("No such user");
+                    setIsError("No such user")
+
+                    //the below code will hide the alert after 2secs
+                    setTimeout(() => {
+                        setIsError("")
+                    }, 2000)
                 }
             })
             .catch((e) => {
-                alert("Something went Wrong");
+                setIsError("Something went Wrong")
+
+                //the below code will hide the alert after 2secs
+                setTimeout(() => {
+                    setIsError("")
+                }, 2000)
             });
     };
 
 
     return (
+        <>
+        {isError.length > 0 && <Alert variant={"danger"} dismissible>
+           {isError}
+        </Alert>}
         <Row>
             <Col md={4} className="mx-auto">
                 <h4> Have an Account? Login:</h4>
@@ -86,6 +100,6 @@ export const LoginView = ({ onLoggedIn }) => {
                 </Form>
             </Col>
         </Row>
-
+</>
     );
 };
