@@ -1,13 +1,17 @@
 import { useState } from "react";
-import { Button, Col, Form, Row } from "react-bootstrap/Button";
+import {Alert, Button, Col, Form, Row} from "react-bootstrap";
+import {useNavigate} from "react-router";
 
 export const SignupView = () => {
     const [Username, setUsername] = useState("");
     const [Password, setPassword] = useState("");
     const [Email, setEmail] = useState("");
     const [Birthday, setBirthday] = useState("");
+    const navigate = useNavigate()
+    const [isError, setIsError] = useState(false)
 
     const handleSubmit = (event) => {
+        setIsError(false)
         event.preventDefault();
 
         // const data = {
@@ -28,17 +32,26 @@ export const SignupView = () => {
             headers: {
                 "Content-Type": "application/json"
             }
-        }).then((response) => {
-            if (response.ok) {
+        }).then((response) => response.json())
+        .then(res => {
                 alert("Signup successful");
-                window.location.reload();
-            } else {
-                alert("Signup failed");
-            }
+                navigate("/login")
+        }).catch(err => {
+            console.log(err)
+            setIsError(true)
+
+            //the below code will hide the alert after 2secs
+            setTimeout(() => {
+                setIsError(false)
+            }, 2000)
         });
     };
 
     return (
+        <>
+        {isError && <Alert variant={"danger"} dismissible>
+            Signup failed
+        </Alert>}
         <Row>
             <Col md={5} className="mx-auto">
                 <h4> You Gots to Register:</h4>
@@ -101,5 +114,6 @@ export const SignupView = () => {
                 </Form>
             </Col>
         </Row>
+        </>
     );
 };

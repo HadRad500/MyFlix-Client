@@ -3,6 +3,7 @@ import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import { Form } from "react-bootstrap";
 import Img from "../img/MyFlix Img.jpeg";
+import {Link} from "react-router-dom";
 
 
 
@@ -13,17 +14,19 @@ export function NavigationBar({ user, onLoggedOut, setSearch }) {
             className="mb-5 justify-content-end navbar-style"
         >
             <Container className="align-bottom navbar-style">
-                <img
-                    alt=""
-                    src={Img}
-                    width="80px"
-                    height="auto"
-                    className="d-inline-block align-top"
-                />
+                <Link to={user ? "/movies" : "/"}>
+                    <img
+                        alt=""
+                        src={Img}
+                        width="80px"
+                        height="auto"
+                        className="d-inline-block align-top"
+                    />
 
-                <Navbar.Brand className="align-bottom navbar-style">
-                    List
-                </Navbar.Brand>
+                    <Navbar.Brand className="align-bottom navbar-style">
+                        List
+                    </Navbar.Brand>
+                    </Link>
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
                 <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className="justify-content-end d-flex flex-grow-1">
