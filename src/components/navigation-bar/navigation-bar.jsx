@@ -3,7 +3,7 @@ import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import { Form } from "react-bootstrap";
 import Img from "../img/MyFlix Img.jpeg";
-import {Link} from "react-router-dom";
+import { Link } from "react-router-dom";
 
 
 
@@ -26,7 +26,7 @@ export function NavigationBar({ user, onLoggedOut, setSearch }) {
                     <Navbar.Brand className="align-bottom navbar-style">
                         List
                     </Navbar.Brand>
-                    </Link>
+                </Link>
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
                 <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className="justify-content-end d-flex flex-grow-1">
