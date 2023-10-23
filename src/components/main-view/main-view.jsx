@@ -18,7 +18,7 @@ export function MainView() {
     const [search, setSearch] = useState("");
     const [filteredMovies, setFilteredMovies] = useState([]);
 
-    function getUser() {
+    /*function getUser() {
         console.log(storedUser.Username)
         fetch(`https://had-movies-d81b2962e1bc.herokuapp.com/users/${storedUser.Username}`,
             {
@@ -32,7 +32,7 @@ export function MainView() {
                 localStorage.setItem("user", JSON.stringify(result));
                 setUser(result)
             });
-    }
+    }*/
 
     function onUserLogin(user, token) {
         setUser(user)
@@ -151,10 +151,8 @@ export function MainView() {
                     path="/profile"
                     element={
                         <ProfileView
-                            user={user}
+                            userName={storedUser?.Username}
                             token={token}
-                            movies={movies}
-                            setuser={setUser}
                         />
                     }
                 />
@@ -173,7 +171,7 @@ export function MainView() {
                                         <Col className="mb-4" key={movie.id} md={3}>
                                             <MovieCard
                                                 movie={movie}
-                                                getUser={getUser}
+                                                setUser={setUser}
                                                 user={user}
                                             />
                                         </Col>

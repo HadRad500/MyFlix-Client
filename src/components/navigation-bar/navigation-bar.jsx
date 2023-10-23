@@ -29,7 +29,7 @@ export function NavigationBar({ user, onLoggedOut, setSearch }) {
                 </Link>
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
                 <Navbar.Collapse id="basic-navbar-nav">
-                    <Nav className="justify-content-end d-flex flex-grow-1">
+                    <Nav>
                         {!user ? (
                             <>
                                 <Nav.Item>

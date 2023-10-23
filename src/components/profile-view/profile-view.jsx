@@ -1,22 +1,52 @@
-import React, { useEffect, useState } from "react";
+import { useState } from "react";
 import { Button, Card, CardGroup, Col, Container, Form, Row } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import MovieCard from "../movie-card/movie-card";
+import { MovieCard } from "../movie-card/movie-card";
 
+export const ProfileView = ({ userName, token, }) => {
 
-export function ProfileView() {
+    function getUser() {
+        console.log(userName)
+        return fetch(`https://had-movies-d81b2962e1bc.herokuapp.com/users/${userName}`,
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                },
+            }
+        )
+            .then((res) => res.json())
+            .then((result) => {
+                localStorage.setItem("user", JSON.stringify(result));
+                return result
+            });
+    }
 
+    function init() {
+        getUser()
+        return JSON.parse(localStorage.getItem("user"));
+
+    }
+    const [user, setUser] = useState(init());
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [email, setEmail] = useState("");
     const [birthday, setBirthday] = useState("");
 
+
     const handleSubmit = (event) => {
         event.preventDefault();
 
-        let result = movies.filter((m) => user.favoriteMovies.includes(m._id));
+        console.log(JSON.stringify(user));
 
-        fetch(`https://had-movies-d81b2962e1bc.herokuapp.com/users/${user.username}`,
+        let data = {
+            Username: username,
+            Password: password,
+            Email: email,
+            Birthday: birthday,
+        };
+
+
+        fetch(`https://had-movies-d81b2962e1bc.herokuapp.com/users/${user.Username}`,
             {
                 method: "PUT",
                 headers: {
@@ -42,11 +72,13 @@ export function ProfileView() {
     };
 
     const deleteAccount = () => {
-        fetch(`https://had-movies-d81b2962e1bc.herokuapp.com/users/${user.username}`,
+        fetch(`https://had-movies-d81b2962e1bc.herokuapp.com/users/${user.Username}`,
             {
                 method: "DELETE",
                 "Content-Type": "application/json",
-                Authorization: `Bearer ${token}`,
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
             }).then((response) => {
                 if (response.ok) {
                     setUser(null);
@@ -57,119 +89,119 @@ export function ProfileView() {
                     alert("Account could not be Deleted")
                 }
             });
+    };
 
-        return (
-            <>
-                <Container className="">
-                    <Row className="justify-content-md-center">
-                        <Col md={8}>
-                            <CardGroup>
-                                <Card className="mb-5 border border-0 card-custom">
-                                    <Card.Body>
-                                        <Card.Title>My Profile</Card.Title>
-                                        <Card.Text>Change your Infos</Card.Text>
-                                        <Form onSubmit={handleUpdate}>
-                                            <Form.Group>
-                                                <Form.Label>
-                                                    username:
-                                                    <Form.Control
-                                                        type="text"
-                                                        value={username}
-                                                        onChange={(e) => {
-                                                            setUsername(e.target.value);
-                                                        }}
-                                                        placeholder={user.username}
-                                                    />
-                                                </Form.Label>
-                                            </Form.Group>
+    return (
+        <>
+            <Container className="">
+                <Row className="justify-content-md-center">
+                    <Col md={8}>
+                        <CardGroup>
+                            <Card className="mb-5 border border-0 card-custom">
+                                <Card.Body>
+                                    <Card.Title>My Profile</Card.Title>
+                                    <Card.Text>Change your Infos</Card.Text>
+                                    <Form onSubmit={handleSubmit}>
+                                        <Form.Group>
+                                            <Form.Label>
+                                                username:
+                                                <Form.Control
+                                                    type="text"
+                                                    value={username}
+                                                    onChange={(e) => {
+                                                        setUsername(e.target.value);
+                                                    }}
+                                                    placeholder={user?.username}
+                                                />
+                                            </Form.Label>
+                                        </Form.Group>
 
-                                            <Form.Group>
-                                                <Form.Label>
-                                                    Password:
-                                                    <Form.Control
-                                                        type="password"
-                                                        value={password}
-                                                        onChange={(e) => {
-                                                            setPassword(e.target.value);
-                                                        }}
-                                                    />
-                                                </Form.Label>
-                                            </Form.Group>
+                                        <Form.Group>
+                                            <Form.Label>
+                                                Password:
+                                                <Form.Control
+                                                    type="password"
+                                                    value={password}
+                                                    onChange={(e) => {
+                                                        setPassword(e.target.value);
+                                                    }}
+                                                />
+                                            </Form.Label>
+                                        </Form.Group>
 
-                                            <Form.Group>
-                                                <Form.Label>
-                                                    email:
-                                                    <Form.Control
-                                                        type="email"
-                                                        value={email}
-                                                        onChange={(e) => {
-                                                            setEmail(e.target.value);
-                                                        }}
-                                                        placeholder={user.email}
-                                                    />
-                                                </Form.Label>
-                                            </Form.Group>
+                                        <Form.Group>
+                                            <Form.Label>
+                                                email:
+                                                <Form.Control
+                                                    type="email"
+                                                    value={email}
+                                                    onChange={(e) => {
+                                                        setEmail(e.target.value);
+                                                    }}
+                                                    placeholder={user?.email}
+                                                />
+                                            </Form.Label>
+                                        </Form.Group>
 
-                                            <Form.Group>
-                                                <Form.Label>
-                                                    birth:
-                                                    <Form.Control
-                                                        type="date"
-                                                        value={birthday}
-                                                        onChange={(e) => {
-                                                            setBirthday(e.target.value);
-                                                        }}
-                                                    />
-                                                </Form.Label>
-                                            </Form.Group>
-
+                                        <Form.Group>
+                                            <Form.Label>
+                                                birth:
+                                                <Form.Control
+                                                    type="date"
+                                                    value={birthday}
+                                                    onChange={(e) => {
+                                                        setBirthday(e.target.value);
+                                                    }}
+                                                />
+                                            </Form.Label>
+                                        </Form.Group>
+                                        <Link to="/movies">
                                             <Button
                                                 variant="primary"
                                                 type="submit"
-                                                onClick={handleUpdate}
+                                                onClick={handleSubmit}
                                                 className="text-white mt-4" >
                                                 Update Yo Profile
                                             </Button>
-                                        </Form>
-                                        <Link to="/login">
-                                            <Button
-                                                variant="danger"
-                                                type=""
-                                                onClick={deleteAccount}
-                                                className="text-white mt=3">
-                                                Delete Yo Account
-                                            </Button>
                                         </Link>
-                                    </Card.Body>
-                                </Card>
-                            </CardGroup>
-                        </Col>
-                    </Row>
-                </Container>
+                                    </Form>
+                                    <Button
+                                        variant="danger"
+                                        type=""
+                                        onClick={deleteAccount}
+                                        className="text-white mt=3">
+                                        Delete Yo Account
+                                    </Button>
+                                </Card.Body>
+                            </Card>
+                        </CardGroup>
+                    </Col>
+                </Row>
+            </Container>
 
-                <Container>
-                    <Row className="justify-content-md-center align-items-center">
-                        {result.map((movie) => {
-                            return (
-                                <Col
-                                    key={movie._id}
-                                    className="mb-4 justify-content-center align-items-center d-flex"
+            <Container>
+                <Row className="justify-content-md-center align-items-center">
+                    {user?.FavoriteMovies?.map((movie) => {
+                        return (
+                            <Col
+                                key={movie._id}
+                                className="mb-4 justify-content-center align-items-center d-flex"
+                            >
+                                <MovieCard
+                                    movie={movie}
+                                    setUser={setUser}
+                                    user={user}
                                 >
-                                    <MovieCard
-                                        movie={movie}
-                                        token={token}
-                                        setUser={setUser}
-                                        user={user}
-                                    />
-                                </Col>
-                            );
-                        })}
-                    </Row>
-                </Container>
-            </>
-        );
-    };
+                                </MovieCard>
+                            </Col>
+                        );
+                    })}
+                </Row>
+            </Container>
+        </>
+    );
 };
+
 
 
 
