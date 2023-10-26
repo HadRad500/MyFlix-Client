@@ -3,23 +3,15 @@ import { Button, Card, Col, Container, Row } from "react-bootstrap";
 import { Link } from 'react-router-dom'
 
 
-export const MovieCard = ({ movie, setUser, user }) => {
+export const MovieCard = ({ movie, getUser, user, isFave }) => {
     const token = localStorage.getItem("token");
-    const [isFav, setIsFav] = useState((user.FavoriteMovies || []).includes(movie.id));
 
-
-    //     useEffect(() => {
-    //         console.log(user);
-    //         if (user.favoriteMovies && user.favoriteMovies.includes(movie._id)) {
-    //             setIsFavorite(true);
-    //         }
-    //     }, []);
 
     const addFavoriteMovie = () => {
         const storedUser = JSON.parse(localStorage.getItem("user"));
 
         console.log("Add FavoriteMovies")
-        fetch(`https://had-movies-d81b2962e1bc.herokuapp.com/users/${storedUser.Username}/movies/${movie.id}`,
+        fetch(`https://movie-api-r6ua.onrender.com/users/${storedUser.Username}/movies/${movie.id}`,
             {
                 method: "POST",
                 headers: {
@@ -29,8 +21,7 @@ export const MovieCard = ({ movie, setUser, user }) => {
             })
             .then((response) => response.json())
             .then((response) => {
-                setUser(response)
-                setIsFav((response.FavoriteMovies || []).includes(movie.id))
+                getUser()
                 console.log("Added to List!")
             }).catch(e => {
                 console.log(e)
@@ -43,7 +34,7 @@ export const MovieCard = ({ movie, setUser, user }) => {
 
 
         console.log("Removed FavoriteMovies")
-        fetch(`https://had-movies-d81b2962e1bc.herokuapp.com/users/${storedUser.Username}/movies/${movie.id}`,
+        fetch(`https://movie-api-r6ua.onrender.com/users/${storedUser.Username}/movies/${movie.id}`,
             {
                 method: "DELETE",
                 headers: {
@@ -53,8 +44,7 @@ export const MovieCard = ({ movie, setUser, user }) => {
             })
             .then((response) => response.json())
             .then((response) => {
-                setUser(response)
-                setIsFav((response.FavoriteMovies || []).includes(movie.id))
+                getUser()
                 console.log("Removed from List!")
             }).catch(e => {
                 console.log(e)
@@ -80,7 +70,7 @@ export const MovieCard = ({ movie, setUser, user }) => {
                 </Link>
 
                 <Col className="col-3">
-                    {isFav ? (
+                    {isFave ? (
                         <Button
                             className="btn-fav-movie"
                             variant="link"

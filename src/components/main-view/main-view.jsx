@@ -18,9 +18,9 @@ export function MainView() {
     const [search, setSearch] = useState("");
     const [filteredMovies, setFilteredMovies] = useState([]);
 
-    /*function getUser() {
+    function getUser() {
         console.log(storedUser.Username)
-        fetch(`https://had-movies-d81b2962e1bc.herokuapp.com/users/${storedUser.Username}`,
+        fetch(`https://movie-api-r6ua.onrender.com/users/${storedUser.Username}`,
             {
                 headers: {
                     Authorization: `Bearer ${token}`
@@ -29,10 +29,11 @@ export function MainView() {
         )
             .then((res) => res.json())
             .then((result) => {
+                // console.log("getUser:", result)
                 localStorage.setItem("user", JSON.stringify(result));
                 setUser(result)
             });
-    }*/
+    }
 
     function onUserLogin(user, token) {
         setUser(user)
@@ -46,11 +47,19 @@ export function MainView() {
     }
 
     useEffect(() => {
+        if (!token || user) {
+            return;
+        }
+
+        getUser()
+    })
+
+    useEffect(() => {
         if (!token) {
             return;
         }
 
-        fetch("https://had-movies-d81b2962e1bc.herokuapp.com/movies",
+        fetch("https://movie-api-r6ua.onrender.com/movies",
             {
                 headers: {
                     Authorization: `Bearer ${token}`
@@ -123,9 +132,10 @@ export function MainView() {
                                 return (
                                     <Col md="4" key={movie.id}>
                                         <MovieCard
+                                            isFave={!!user.FavoriteMovies.find(mv => mv._id == movie.id)}
                                             movie={movie}
                                             token={token}
-                                            setUser={setUser}
+                                            getUser={getUser}
                                             user={user}
                                         />
                                     </Col>
@@ -151,6 +161,9 @@ export function MainView() {
                     path="/profile"
                     element={
                         <ProfileView
+                            movies={movies}
+                            user={user}
+                            getUser={getUser}
                             userName={storedUser?.Username}
                             token={token}
                         />

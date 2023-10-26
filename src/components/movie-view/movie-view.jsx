@@ -17,7 +17,7 @@ export const MovieView = ({ movies }) => {
 
         function getMovie() {
             fetch(
-                `https://had-movies-d81b2962e1bc.herokuapp.com/movies/${movieTitle}`,
+                `https://movie-api-r6ua.onrender.com/movies/${movieTitle}`,
                 {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem('token')}`,

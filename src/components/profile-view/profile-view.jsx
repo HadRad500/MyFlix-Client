@@ -1,37 +1,17 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button, Card, CardGroup, Col, Container, Form, Row } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { MovieCard } from "../movie-card/movie-card";
 
-export const ProfileView = ({ userName, token, }) => {
+export const ProfileView = ({ userName, movies, token, getUser, user: userProfile }) => {
 
-    function getUser() {
-        console.log(userName)
-        return fetch(`https://had-movies-d81b2962e1bc.herokuapp.com/users/${userName}`,
-            {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                },
-            }
-        )
-            .then((res) => res.json())
-            .then((result) => {
-                localStorage.setItem("user", JSON.stringify(result));
-                return result
-            });
-    }
+    const [Username, setUsername] = useState(userProfile.Username || "");
+    const [Password, setPassword] = useState(userProfile.Password || "");
+    const [Email, setEmail] = useState(userProfile.Email || "");
+    const [Birthday, setBirthday] = useState(userProfile.Birthday || "");
 
-    function init() {
-        getUser()
-        return JSON.parse(localStorage.getItem("user"));
-
-    }
-    const [user, setUser] = useState(init());
-    const [username, setUsername] = useState("");
-    const [password, setPassword] = useState("");
-    const [email, setEmail] = useState("");
-    const [birthday, setBirthday] = useState("");
-
+    console.log("userProfile: ", userProfile.FavoriteMovies)
+    console.log("movies: ", movies)
 
     const handleSubmit = (event) => {
         event.preventDefault();
@@ -39,14 +19,14 @@ export const ProfileView = ({ userName, token, }) => {
         console.log(JSON.stringify(user));
 
         let data = {
-            Username: username,
-            Password: password,
-            Email: email,
-            Birthday: birthday,
+            Username,
+            Password,
+            Email,
+            Birthday,
         };
 
 
-        fetch(`https://had-movies-d81b2962e1bc.herokuapp.com/users/${user.Username}`,
+        fetch(`https://movie-api-r6ua.onrender.com/users/${user.Username}`,
             {
                 method: "PUT",
                 headers: {
@@ -71,8 +51,23 @@ export const ProfileView = ({ userName, token, }) => {
             .catch((err) => console.log("error", err));
     };
 
+    // function getFavoriteMovies(movies) {
+    //     // const arr = []
+    //     // for (let index = 0; index < movies.length; index++) {
+    //     //     for (let y = 0; y < userProfile.FavoriteMovies.length; y++) {
+    //     //         if (movies[index].id == userProfile.FavoriteMovies[y]) {
+    //     //             arr.push(movies[index])
+    //     //         }
+    //     //     }
+    //     // }
+    //     return movies.filter(movie => userProfile.FavoriteMovies.includes(movie.id))
+    // }
+
+
+    // const favoriteMovies = getFavoriteMovies(movies)
+
     const deleteAccount = () => {
-        fetch(`https://had-movies-d81b2962e1bc.herokuapp.com/users/${user.Username}`,
+        fetch(`https://movie-api-r6ua.onrender.com/users/${user.Username}`,
             {
                 method: "DELETE",
                 "Content-Type": "application/json",
@@ -95,7 +90,12 @@ export const ProfileView = ({ userName, token, }) => {
         <>
             <Container className="">
                 <Row className="justify-content-md-center">
-                    <Col md={8}>
+                    <Col md={6}>
+                        <div>{userProfile.Username}</div>
+                        <div>{userProfile.Email}</div>
+                        <div>{userProfile.Birthday}</div>
+                    </Col>
+                    <Col md={6}>
                         <CardGroup>
                             <Card className="mb-5 border border-0 card-custom">
                                 <Card.Body>
@@ -107,11 +107,11 @@ export const ProfileView = ({ userName, token, }) => {
                                                 username:
                                                 <Form.Control
                                                     type="text"
-                                                    value={username}
+                                                    value={Username}
                                                     onChange={(e) => {
                                                         setUsername(e.target.value);
                                                     }}
-                                                    placeholder={user?.username}
+                                                    placeholder={Username}
                                                 />
                                             </Form.Label>
                                         </Form.Group>
@@ -121,7 +121,7 @@ export const ProfileView = ({ userName, token, }) => {
                                                 Password:
                                                 <Form.Control
                                                     type="password"
-                                                    value={password}
+                                                    value={Password}
                                                     onChange={(e) => {
                                                         setPassword(e.target.value);
                                                     }}
@@ -134,11 +134,11 @@ export const ProfileView = ({ userName, token, }) => {
                                                 email:
                                                 <Form.Control
                                                     type="email"
-                                                    value={email}
+                                                    value={Email}
                                                     onChange={(e) => {
                                                         setEmail(e.target.value);
                                                     }}
-                                                    placeholder={user?.email}
+                                                    placeholder={"email@email.com"}
                                                 />
                                             </Form.Label>
                                         </Form.Group>
@@ -148,7 +148,7 @@ export const ProfileView = ({ userName, token, }) => {
                                                 birth:
                                                 <Form.Control
                                                     type="date"
-                                                    value={birthday}
+                                                    value={Birthday}
                                                     onChange={(e) => {
                                                         setBirthday(e.target.value);
                                                     }}
@@ -181,16 +181,18 @@ export const ProfileView = ({ userName, token, }) => {
 
             <Container>
                 <Row className="justify-content-md-center align-items-center">
-                    {user?.FavoriteMovies?.map((movie) => {
+                    {(userProfile.FavoriteMovies).map((movie) => {
                         return (
                             <Col
+                                md={3}
                                 key={movie._id}
                                 className="mb-4 justify-content-center align-items-center d-flex"
                             >
                                 <MovieCard
-                                    movie={movie}
-                                    setUser={setUser}
-                                    user={user}
+                                    movie={{ id: movie._id, title: movie.Title, director: movie.Director.Name, genre: movie.Genre.Name, image: movie.ImagePath }}
+                                    getUser={getUser}
+                                    user={userProfile}
+                                    isFave={true}
                                 >
                                 </MovieCard>
                             </Col>

@@ -14,7 +14,7 @@ export const LoginView = ({ onLoggedIn }) => {
             Password: password
         };
 
-        fetch("https://had-movies-d81b2962e1bc.herokuapp.com/login", {
+        fetch("https://movie-api-r6ua.onrender.com/login", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -51,55 +51,55 @@ export const LoginView = ({ onLoggedIn }) => {
 
     return (
         <>
-        {isError.length > 0 && <Alert variant={"danger"} dismissible>
-           {isError}
-        </Alert>}
-        <Row>
-            <Col md={4} className="mx-auto">
-                <h4> Have an Account? Login:</h4>
-                <Form onSubmit={handleSubmit}>
-                    <Form.Group>
-                        <Form.Label>
-                            Username:
-                        </Form.Label>
-                        <Form.Control
-                            type="text"
-                            value={username}
-                            onChange={(e) => {
-                                setUsername(e.target.value);
-                            }}
-                            required
-                            placeholder="Enter Username"
-                        />
-                    </Form.Group>
+            {isError.length > 0 && <Alert variant={"danger"} dismissible>
+                {isError}
+            </Alert>}
+            <Row>
+                <Col md={4} className="mx-auto">
+                    <h4> Have an Account? Login:</h4>
+                    <Form onSubmit={handleSubmit}>
+                        <Form.Group>
+                            <Form.Label>
+                                Username:
+                            </Form.Label>
+                            <Form.Control
+                                type="text"
+                                value={username}
+                                onChange={(e) => {
+                                    setUsername(e.target.value);
+                                }}
+                                required
+                                placeholder="Enter Username"
+                            />
+                        </Form.Group>
 
-                    <Form.Group>
-                        <Form.Label>
-                            Password:
-                        </Form.Label>
-                        <Form.Control
-                            type="password"
-                            value={password}
-                            onChange={(e) => {
-                                setPassword(e.target.value);
-                            }}
-                            required
-                            placeholder="Enter Password"
-                        />
-                    </Form.Group>
-                    <div className="d-grid gap-2 mt-4">
-                        <Button
-                            variant="primary"
-                            type="submit"
-                            onClick={handleSubmit}
-                            className="text-white"
-                        >
-                            Submit
-                        </Button>
-                    </div>
-                </Form>
-            </Col>
-        </Row>
-</>
+                        <Form.Group>
+                            <Form.Label>
+                                Password:
+                            </Form.Label>
+                            <Form.Control
+                                type="password"
+                                value={password}
+                                onChange={(e) => {
+                                    setPassword(e.target.value);
+                                }}
+                                required
+                                placeholder="Enter Password"
+                            />
+                        </Form.Group>
+                        <div className="d-grid gap-2 mt-4">
+                            <Button
+                                variant="primary"
+                                type="submit"
+                                onClick={handleSubmit}
+                                className="text-white"
+                            >
+                                Submit
+                            </Button>
+                        </div>
+                    </Form>
+                </Col>
+            </Row>
+        </>
     );
 };
