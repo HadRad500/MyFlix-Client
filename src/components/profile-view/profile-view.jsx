@@ -1,73 +1,54 @@
-import { useState, useEffect } from "react";
-import { Button, Card, CardGroup, Col, Container, Form, Row } from "react-bootstrap";
+import { useState } from "react";
+import {Alert, Button, Card, CardGroup, Col, Container, Form, Row} from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { MovieCard } from "../movie-card/movie-card";
+import dayjs from "dayjs";
 
-export const ProfileView = ({ userName, movies, token, getUser, user: userProfile }) => {
-
-    const [Username, setUsername] = useState(userProfile.Username || "");
-    const [Password, setPassword] = useState(userProfile.Password || "");
-    const [Email, setEmail] = useState(userProfile.Email || "");
-    const [Birthday, setBirthday] = useState(userProfile.Birthday || "");
-
-    console.log("userProfile: ", userProfile.FavoriteMovies)
-    console.log("movies: ", movies)
+export const ProfileView = ({ token, getUser, user: userProfile }) => {
+    const [message, setMessage] = useState({
+        message: "",
+        variant: ""
+    });
+    const [Username, setUsername] = useState(userProfile?.Username || "");
+    const [Password, setPassword] = useState("");
+    const [Email, setEmail] = useState(userProfile?.Email || "");
+    const [Birthday, setBirthday] = useState(dayjs(userProfile?.Birthday).format("YYYY-MM-DD") || "");
 
     const handleSubmit = (event) => {
         event.preventDefault();
-
-        console.log(JSON.stringify(user));
-
-        let data = {
-            Username,
-            Password,
-            Email,
-            Birthday,
-        };
-
-
-        fetch(`https://movie-api-r6ua.onrender.com/users/${user.Username}`,
+        fetch(`https://movie-api-r6ua.onrender.com/users/${userProfile?.Username}`,
             {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
                     Authorization: `Bearer ${token}`,
                 },
-                body: JSON.stringify(data)
-            }).then(async (response) => {
-                console.log("response:", response);
-                if (response.ok) {
-                    alert("update successful");
-                    const data = await response.json();
-                    localStorage.setItem("user", JSON.stringify(data));
-                    window.location.reload();
-                } else {
-                    const errorText = await response.text();
-
-                    console.log("Error response body:", errorText);
-                    alert("update failed");
-                }
+                body: JSON.stringify({
+                    Username,
+                    Password,
+                    Email,
+                    Birthday,
+                })
+            }).then(resp => resp.text())
+             .then((response) => {
+                 getUser()
+                 setMessage({variant: "success", message: "User information updated!"})
+                 setTimeout(() => {
+                     setMessage({variant: "", message: ""})
+                 }, 3000)
             })
-            .catch((err) => console.log("error", err));
+            .catch((err) => {
+                setMessage({variant: "danger", message: "User information failed to update!"})
+
+                setTimeout(() => {
+                    setMessage({variant: "", message: ""})
+                }, 3000)
+                console.log("error", err)
+            });
     };
 
-    // function getFavoriteMovies(movies) {
-    //     // const arr = []
-    //     // for (let index = 0; index < movies.length; index++) {
-    //     //     for (let y = 0; y < userProfile.FavoriteMovies.length; y++) {
-    //     //         if (movies[index].id == userProfile.FavoriteMovies[y]) {
-    //     //             arr.push(movies[index])
-    //     //         }
-    //     //     }
-    //     // }
-    //     return movies.filter(movie => userProfile.FavoriteMovies.includes(movie.id))
-    // }
-
-
-    // const favoriteMovies = getFavoriteMovies(movies)
-
     const deleteAccount = () => {
-        fetch(`https://movie-api-r6ua.onrender.com/users/${user.Username}`,
+        fetch(`https://movie-api-r6ua.onrender.com/users/${userProfile?.Username}`,
             {
                 method: "DELETE",
                 "Content-Type": "application/json",
@@ -91,11 +72,12 @@ export const ProfileView = ({ userName, movies, token, getUser, user: userProfil
             <Container className="">
                 <Row className="justify-content-md-center">
                     <Col md={6}>
-                        <div>{userProfile.Username}</div>
-                        <div>{userProfile.Email}</div>
-                        <div>{userProfile.Birthday}</div>
+                        <div>Username: {userProfile?.Username}</div>
+                        <div>Email: {userProfile?.Email}</div>
+                        <div>Birthday: {dayjs(userProfile?.Birthday).format("YYYY-MM-DD")}</div>
                     </Col>
                     <Col md={6}>
+                        {message.message && <Alert variant={message.variant}>{message.message}</Alert>}
                         <CardGroup>
                             <Card className="mb-5 border border-0 card-custom">
                                 <Card.Body>
@@ -181,7 +163,7 @@ export const ProfileView = ({ userName, movies, token, getUser, user: userProfil
 
             <Container>
                 <Row className="justify-content-md-center align-items-center">
-                    {(userProfile.FavoriteMovies).map((movie) => {
+                    {(userProfile?.FavoriteMovies || []).map((movie) => {
                         return (
                             <Col
                                 md={3}

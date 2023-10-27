@@ -3,7 +3,7 @@ import { Button, Card, Col, Container, Row } from "react-bootstrap";
 import { Link } from 'react-router-dom'
 
 
-export const MovieCard = ({ movie, getUser, user, isFave }) => {
+export const MovieCard = ({ movie, getUser, isFave }) => {
     const token = localStorage.getItem("token");
 
 

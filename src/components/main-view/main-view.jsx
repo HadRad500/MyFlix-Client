@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { MovieCard } from "../movie-card/movie-card";
 import { MovieView } from "../movie-view/movie-view";
 import { LoginView } from "../login-view/login-view";
@@ -12,24 +12,22 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 export function MainView() {
     const storedUser = JSON.parse(localStorage.getItem("user"));
     const storedToken = localStorage.getItem("token");
-    const [user, setUser] = useState(storedUser ? storedUser : null);
-    const [token, setToken] = useState(storedToken ? storedToken : null);
+    const [user, setUser] = useState(storedUser);
+    const [token, setToken] = useState(storedToken);
     const [movies, setMovies] = useState([]);
     const [search, setSearch] = useState("");
     const [filteredMovies, setFilteredMovies] = useState([]);
 
-    function getUser() {
-        console.log(storedUser.Username)
+    function getUser(){
         fetch(`https://movie-api-r6ua.onrender.com/users/${storedUser.Username}`,
-            {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                },
-            }
-        )
+              {
+                  headers: {
+                      Authorization: `Bearer ${token}`
+                  },
+              }
+              )
             .then((res) => res.json())
             .then((result) => {
-                // console.log("getUser:", result)
                 localStorage.setItem("user", JSON.stringify(result));
                 setUser(result)
             });
@@ -47,18 +45,16 @@ export function MainView() {
     }
 
     useEffect(() => {
-        if (!token || user) {
+        if (!token) {
             return;
         }
-
         getUser()
-    })
+    },[token])
 
     useEffect(() => {
         if (!token) {
             return;
         }
-
         fetch("https://movie-api-r6ua.onrender.com/movies",
             {
                 headers: {
@@ -68,8 +64,6 @@ export function MainView() {
         )
             .then((res) => res.json())
             .then((result) => {
-                //console.log(result)
-
                 const formattedResult = result.map((res) => ({
                     title: res.Title,
                     genre: res.Genre.Name,
@@ -79,6 +73,8 @@ export function MainView() {
                 }));
                 console.log("formatted", formattedResult)
                 setMovies(formattedResult)
+            }).catch(e => {
+                console.log(e)
             });
 
     }, [token]);
@@ -183,6 +179,7 @@ export function MainView() {
                                     {movies.map((movie) => (
                                         <Col className="mb-4" key={movie.id} md={3}>
                                             <MovieCard
+                                                isFave={!!(user.FavoriteMovies || []).find(mov => mov._id === movie.id)}
                                                 movie={movie}
                                                 setUser={setUser}
                                                 user={user}
