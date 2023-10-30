@@ -18,6 +18,7 @@ Mern (MongoDB, Express, React, and Node.js)
 ## Project Link
 
 Link to App's Respository:
-
+https://github.com/HadRad500/MyFlix-Client.git
 
 Link to Live App:
+myflix-hadrad-500.netlify.app
