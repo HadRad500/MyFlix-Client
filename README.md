@@ -4,7 +4,7 @@
 
 MyFlix is a movie website that showcases my personal top 10 movies. Users can signup and discover more details about my favorite movies!
 
-![myFlix-screenshot](./components/img/myFlix-screenshot.png)
+![myFlix-screenshot](./src/components/img/myFlix-screenshot.png)
 
 ## Tech Stack
 
