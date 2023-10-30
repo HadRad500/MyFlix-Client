@@ -4,7 +4,7 @@
 
 MyFlix is a movie website that showcases my personal top 10 movies. Users can signup and discover more details about my favorite movies!
 
-![myFlix-screenshot](.//components/img/myFlix-screenshot.png)
+![myFlix-screenshot](./components/img/myFlix-screenshot.png)
 
 ## Tech Stack
 
@@ -23,4 +23,4 @@ Link to App's Respository:
 https://github.com/HadRad500/MyFlix-Client.git
 
 Link to Live App:
-myflix-hadrad-500.netlify.app
+https://myflix-hadrad-500.netlify.app/
