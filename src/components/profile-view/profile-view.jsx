@@ -1,5 +1,5 @@
 import { useState } from "react";
-import {Alert, Button, Card, CardGroup, Col, Container, Form, Row} from "react-bootstrap";
+import { Alert, Button, Card, CardGroup, Col, Container, Form, Row } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { MovieCard } from "../movie-card/movie-card";
 import dayjs from "dayjs";
@@ -30,18 +30,18 @@ export const ProfileView = ({ token, getUser, user: userProfile }) => {
                     Birthday,
                 })
             }).then(resp => resp.text())
-             .then((response) => {
-                 getUser()
-                 setMessage({variant: "success", message: "User information updated!"})
-                 setTimeout(() => {
-                     setMessage({variant: "", message: ""})
-                 }, 3000)
+            .then((response) => {
+                getUser()
+                setMessage({ variant: "success", message: "User information updated!" })
+                setTimeout(() => {
+                    setMessage({ variant: "", message: "" })
+                }, 3000)
             })
             .catch((err) => {
-                setMessage({variant: "danger", message: "User information failed to update!"})
+                setMessage({ variant: "danger", message: "User information failed to update!" })
 
                 setTimeout(() => {
-                    setMessage({variant: "", message: ""})
+                    setMessage({ variant: "", message: "" })
                 }, 3000)
                 console.log("error", err)
             });
@@ -57,7 +57,7 @@ export const ProfileView = ({ token, getUser, user: userProfile }) => {
                 },
             }).then((response) => {
                 if (response.ok) {
-                    setUser(null);
+                    //setUser(null);
                     localStorage.clear();
                     alert("Account Deleted");
                     window.location.reload("/login");
