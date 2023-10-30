@@ -4,6 +4,8 @@
 
 MyFlix is a movie website that showcases my personal top 10 movies. Users can signup and discover more details about my favorite movies!
 
+![app-screenshot](.//components/img/myFlix-screenshot.png)
+
 ## Tech Stack
 
 Mern (MongoDB, Express, React, and Node.js)
